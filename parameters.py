@@ -1,0 +1,16 @@
+seed_value = 33114
+batch_norm_decay = 0.99
+batch_norm_epsilon = 1e-6
+l2_weight_decay = 0
+input_shape = 224
+dropout_value = 0
+batch_size = 64
+nb_epochs = 2
+train_cutoff = 0.85
+val_cutoff = 0.075
+num_layers_copy = 0
+lr = 0.003
+lr_decay = 3e-6
+nb_epoch_unaug = 0
+model_filemane = "model_weights.h5"
+old_model_filename = "final.h5"

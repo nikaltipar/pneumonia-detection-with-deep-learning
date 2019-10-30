@@ -1,0 +1,9 @@
+h5py
+matplotlib
+tensorflow
+numpy
+pandas
+pathlib
+sklearn
+tf_explain
+pillow

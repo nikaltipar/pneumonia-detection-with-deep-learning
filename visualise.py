@@ -6,46 +6,57 @@ from tf_explain.core.integrated_gradients import IntegratedGradients
 from sklearn.metrics import confusion_matrix
 
 
-def plot_confusion_matrix(real_labels, predicted_labels, dest_filename, title = 'Confusion matrix', cmap = plt.cm.Blues):
+def plot_confusion_matrix(
+    real_labels, predicted_labels, dest_filename, title='Confusion matrix', cmap=plt.cm.Blues
+):
     cm = confusion_matrix(real_labels, predicted_labels)
     classes = ['Normal', 'Pneumonia']
     fig, ax = plt.subplots()
     im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
     ax.figure.colorbar(im, ax=ax)
-    ax.set(xticks=np.arange(cm.shape[1]),
-           yticks=np.arange(cm.shape[0]),
-           xticklabels=classes, yticklabels=classes,
-           title=title,
-           ylabel='True label',
-           xlabel='Predicted label')
+    ax.set(
+        xticks=np.arange(cm.shape[1]),
+        yticks=np.arange(cm.shape[0]),
+        xticklabels=classes,
+        yticklabels=classes,
+        title=title,
+        ylabel='True label',
+        xlabel='Predicted label',
+    )
 
     # Rotate the tick labels and set their alignment.
-    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
-             rotation_mode="anchor")
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
 
     # Loop over data dimensions and create text annotations.
     fmt = 'd'
-    thresh = cm.max() / 2.
+    thresh = cm.max() / 2.0
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
-            ax.text(j, i, format(cm[i, j], fmt),
-                    ha="center", va="center",
-                    color="white" if cm[i, j] > thresh else "black")
+            ax.text(
+                j,
+                i,
+                format(cm[i, j], fmt),
+                ha="center",
+                va="center",
+                color="white" if cm[i, j] > thresh else "black",
+            )
     fig.tight_layout()
 
     fig.savefig(dest_filename)
 
-def integratedGradient(model, filename, target_size, destination, num_iterations = 20):
+
+def integratedGradient(model, filename, target_size, destination, num_iterations=20):
     img = tf.keras.preprocessing.image.load_img(filename, target_size=target_size)
-    img = np.array(tf.keras.preprocessing.image.img_to_array(img)) / 255.
+    img = np.array(tf.keras.preprocessing.image.img_to_array(img)) / 255.0
 
     data = ([img], None)
 
     explainer = IntegratedGradients()
-    grid = explainer.explain(data, model, 0, n_steps = num_iterations)
+    grid = explainer.explain(data, model, 0, n_steps=num_iterations)
     explainer.save(grid, ".", destination)
 
-def integratedGradients(model, filenames, target_size, num_iterations = 20):
+
+def integratedGradients(model, filenames, target_size, num_iterations=20):
     i = 1
     n = len(filenames)
     for filename in filenames:
@@ -61,14 +72,15 @@ def integratedGradients(model, filenames, target_size, num_iterations = 20):
         plt.imshow(img)
         fig.savefig("integrated_grads.png")
 
-def generateHistoryPlots(history, dest_filename = "history.png"):
+
+def generateHistoryPlots(history, dest_filename="history.png"):
     acc = history.history['accuracy']
     val_acc = history.history['val_accuracy']
     loss = history.history['loss']
     val_loss = history.history['val_loss']
 
     epochs = range(1, len(acc) + 1)
-    fig = plt.figure(figsize=(16,9))
+    fig = plt.figure(figsize=(16, 9))
 
     plt.subplot(1, 2, 1)
     plt.plot(epochs, loss, 'bo', label='Training Loss')

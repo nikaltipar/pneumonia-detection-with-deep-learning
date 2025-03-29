@@ -12,5 +12,5 @@ num_layers_copy = 0
 lr = 0.003
 lr_decay = 3e-6
 nb_epoch_unaug = 0
-model_filemane = "model_weights.h5"
-old_model_filename = "final.h5"
+model_filemane = 'model_weights.h5'
+old_model_filename = 'final.h5'

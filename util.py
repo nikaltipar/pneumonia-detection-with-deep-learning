@@ -6,6 +6,7 @@ import random
 from pathlib import Path
 from sklearn.utils import class_weight
 
+
 def readDir(direc):
     data = []
     normal_cases_dir = direc / 'NORMAL'
@@ -21,6 +22,7 @@ def readDir(direc):
 
     return data
 
+
 def readData(direc):
     data_dir = Path(direc)
     train_dir = data_dir / 'train'
@@ -29,38 +31,41 @@ def readData(direc):
 
     data = readDir(train_dir) + readDir(val_dir) + readDir(test_dir)
     data = pd.DataFrame(data, columns=['image', 'label'], index=None)
-    data = data.sample(frac=1.).reset_index(drop=True)
+    data = data.sample(frac=1.0).reset_index(drop=True)
 
     return data
+
 
 def setSeed(seed):
     tf.keras.backend.clear_session()
     seed_value = seed
 
     os.environ['PYTHONHASHSEED'] = str(seed_value)
-    #os.environ['TF_DETERMINISTIC_OPS']=str(1)
+    # os.environ['TF_DETERMINISTIC_OPS']=str(1)
 
     random.seed(seed_value)
     np.random.seed(seed_value)
     tf.random.set_seed(seed_value)
+
 
 def splitTrainValTest(data, train_cutoff, val_cutoff):
     splits = np.cumsum([train_cutoff, val_cutoff])
 
     n = len(data)
     train_cutoff = int(splits[0] * n)
-    train_data = data[:train_cutoff].sample(frac=1.).reset_index(drop=True)
+    train_data = data[:train_cutoff].sample(frac=1.0).reset_index(drop=True)
 
     val_cutoff = int(splits[1] * n)
-    val_data = data[train_cutoff:val_cutoff].sample(frac=1.).reset_index(drop=True)
+    val_data = data[train_cutoff:val_cutoff].sample(frac=1.0).reset_index(drop=True)
 
-    test_data = data[val_cutoff:].sample(frac=1.).reset_index(drop=True)
+    test_data = data[val_cutoff:].sample(frac=1.0).reset_index(drop=True)
 
     return (train_data, val_data, test_data)
 
+
 def getClassWeights(train_data):
-    class_weights = class_weight.compute_class_weight('balanced',
-                                                      np.unique(train_data['label']),
-                                                      train_data['label'])
+    class_weights = class_weight.compute_class_weight(
+        'balanced', np.unique(train_data['label']), train_data['label']
+    )
 
     return class_weights
